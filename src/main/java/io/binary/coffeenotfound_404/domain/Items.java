@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class Items {
     @Id
     @Column(name = "Item_id")
@@ -25,4 +25,14 @@ public class Items {
     private String imageUrl;
     private LocalDate createdAt;
 
+    @Builder
+    public Items(String name, Integer price, String category, Integer stock, String desc, String imageUrl, LocalDate createdAt) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.stock = stock;
+        this.desc = desc;
+        this.imageUrl = imageUrl;
+        this.createdAt = createdAt;
+    }
 }
