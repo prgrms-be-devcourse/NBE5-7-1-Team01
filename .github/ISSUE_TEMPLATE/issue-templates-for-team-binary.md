@@ -1,7 +1,7 @@
 ---
-name: "[기능 | 버그 | 리팩토링 | 문서 | 테스트] 간단한 설명 - 이름"
-about: Team Binary의 issue template
-title: ''
+name: issue templates for team Binary
+about: Team Binary의 issue templates
+title: "[기능 | 버그 | 리팩토링 | 문서 | 테스트] 간단한 설명 - 이름"
 labels: ''
 assignees: ''
 
