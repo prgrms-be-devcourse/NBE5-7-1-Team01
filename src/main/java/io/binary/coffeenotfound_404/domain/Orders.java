@@ -3,7 +3,6 @@ package io.binary.coffeenotfound_404.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +16,8 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    // 같은 이메일로 여러번 주문 가능
+    @Column(nullable = false)
     private String email;
 
     @Setter
@@ -26,23 +26,29 @@ public class Orders {
     @Setter
     private String postcode;
 
-    private  LocalDateTime orderedAt;
-
-    // 객체가 저장되기 전 orderedAt 필드에 현재 시간을 자동으로 설정
-    @PrePersist
-    private void setOrderedAt() {
-        this.orderedAt = LocalDateTime.now();
-    }
+    private final LocalDateTime orderedAt = LocalDateTime.now();
 
     @Setter
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrdersItems> ordersItems;
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItems> orderItemsList;
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", postcode='" + postcode + '\'' +
+                ", orderedAt=" + orderedAt +
+                ", orderItemsList=" + orderItemsList +
+                '}';
+    }
 
     @Builder
-    public Orders(String email, String address, String postcode, List<OrdersItems> ordersItems) {
+    public Orders(String email, String address, String postcode, List<OrderItems> orderItemsList) {
         this.email = email;
         this.address = address;
         this.postcode = postcode;
-        this.ordersItems = ordersItems;
+        this.orderItemsList = orderItemsList;
     }
 }
