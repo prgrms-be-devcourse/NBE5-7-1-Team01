@@ -8,5 +8,17 @@ public class ItemRequestDto {
     public String desc;
     public String imageUrl;
 
-
+    @Override
+    public String toString() {
+        return "ItemRequestDto{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", stock=" + stock +
+                ", desc='" + desc + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }
+
+

@@ -4,11 +4,13 @@ import io.binary.coffeenotfound_404.domain.Items;
 import io.binary.coffeenotfound_404.dto.ItemRequestDto;
 import io.binary.coffeenotfound_404.dto.ItemResponseDto;
 import io.binary.coffeenotfound_404.service.ItemService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/items")
+@Slf4j
 //CRUD Controller
 public class ItemController {
     private final ItemService itemService;
@@ -18,17 +20,18 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    //생성
+    //아이템 생성 (POST /items)
     @PostMapping
     public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemRequestDto dto) {
         //DTO -> Service
         Items saveItem = itemService.createItem(dto);
+
         return ResponseEntity.ok(new ItemResponseDto(saveItem));
 
     }
 
 
-    //조회
+    //단일 조회 (GET /Items/{id})
     @GetMapping("/{id}")
     public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long id) {
         Items item = itemService.getItemById(id);

@@ -24,4 +24,18 @@ public class ItemResponseDto {
         this.imageUrl = item.getImageUrl();
         this.createdAt = item.getCreatedAt();
     }
+
+    @Override
+    public String toString() {
+        return "ItemResponseDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", stock=" + stock +
+                ", desc='" + desc + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
