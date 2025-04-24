@@ -5,6 +5,7 @@ import io.binary.coffeenotfound_404.domain.OrderItems;
 import io.binary.coffeenotfound_404.domain.Orders;
 import io.binary.coffeenotfound_404.dto.CreateOrdersRequestDto;
 import io.binary.coffeenotfound_404.dto.OrderItemsDto;
+import io.binary.coffeenotfound_404.dto.UpdateOrderRequestDto;
 import io.binary.coffeenotfound_404.exceptions.OrdersException;
 import io.binary.coffeenotfound_404.repository.ItemsRepository;
 import io.binary.coffeenotfound_404.repository.OrdersRepository;
@@ -101,4 +102,42 @@ public class OrdersService {
         // 일치하는 id의 주문이 없는 경우 예외 발생
         throw new OrdersException.ItemsNotFoundException();
     }
+
+    // 주문 수정 기능
+    public void updateOrder(String email, Long orderId, UpdateOrderRequestDto dto) {
+
+        /* 1) 기본 검증 */
+        ordersValidator.emailValidate(email);
+
+        Orders order = ordersRepository.findByEmail(email).stream()
+                .filter(o -> o.getId().equals(orderId))
+                .findFirst()
+                .orElseThrow(OrdersException.InvalidOrderItemsException::new);
+
+        /* 2) 주소·우편번호 부분 수정 */
+        if (dto.getAddress() != null)   order.setAddress(dto.getAddress());
+        if (dto.getPostcode() != null)  order.setPostcode(dto.getPostcode());
+
+        /* 3) 주문‑상품 전체 교체  */
+        if (dto.getOrderItemsList() != null && !dto.getOrderItemsList().isEmpty()) {
+
+            List<OrderItems> current = order.getOrderItemsList();
+            current.clear();
+
+            for (OrderItemsDto line : dto.getOrderItemsList()) {
+
+                Items item = itemsRepository.findById(line.getItemsId())
+                        .orElseThrow(OrdersException.ItemsNotFoundException::new);
+
+                OrderItems oi = OrderItems.builder()
+                        .orders(order)
+                        .items(item)
+                        .quantity(line.getQuantity())
+                        .build();
+
+                current.add(oi);
+            }
+        }
+    }
+
 }

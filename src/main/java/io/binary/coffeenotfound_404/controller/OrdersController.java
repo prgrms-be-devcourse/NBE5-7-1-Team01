@@ -2,6 +2,7 @@ package io.binary.coffeenotfound_404.controller;
 
 import io.binary.coffeenotfound_404.domain.Orders;
 import io.binary.coffeenotfound_404.dto.CreateOrdersRequestDto;
+import io.binary.coffeenotfound_404.dto.UpdateOrderRequestDto;
 import io.binary.coffeenotfound_404.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,4 +50,11 @@ public class OrdersController {
     }
 
     @PutMapping("/{email:.+}/{orderId}")
+    public ResponseEntity<Void> updateOrder(@PathVariable String email,
+                                            @PathVariable Long orderId,
+                                            @RequestBody UpdateOrderRequestDto dto) {
+
+        ordersService.updateOrder(email, orderId, dto);
+        return ResponseEntity.noContent().build();   // 204
+    }
 }
