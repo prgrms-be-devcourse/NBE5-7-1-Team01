@@ -1,8 +1,11 @@
 package io.binary.coffeenotfound_404.service;
 
 import io.binary.coffeenotfound_404.domain.Items;
+import io.binary.coffeenotfound_404.dto.ItemRequestDto;
 import io.binary.coffeenotfound_404.repository.ItemRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 // 이미지 저장 경로 가져와야 하고
 
@@ -14,7 +17,16 @@ public class ItemService {
        this.itemRepository = itemRepository;
    }
 
-   public Items createItem(Items item) {
+   public Items createItem(ItemRequestDto dto) {
+       Items item = Items.builder()
+               .name(dto.name)
+               .price(dto.price)
+               .category(dto.category)
+               .stock(dto.stock)
+               .desc(dto.desc)
+               .imageUrl(dto.imageUrl)
+               .createdAt(LocalDate.now())
+               .build();
        return itemRepository.save(item);
    }
 
@@ -23,15 +35,15 @@ public class ItemService {
                .orElseThrow(()->new RuntimeException("Item not found"));
    }
 
-   public Items updateItem(Long id, Items updatedItem) {
+   public Items updateItem(Long id, ItemRequestDto dto) {
        Items item = itemRepository.findById(id)
                .orElseThrow(()->new RuntimeException("Item not found"));
-       item.setName(updatedItem.getName());
-       item.setPrice(updatedItem.getPrice());
-       item.setStock(updatedItem.getStock());
-       item.setDesc(updatedItem.getDesc());
-       item.setImageUrl(updatedItem.getImageUrl());
-       item.setCreatedAt(updatedItem.getCreatedAt());
+
+       item.setName(dto.name);
+       item.setPrice(dto.price);
+       item.setStock(dto.stock);
+       item.setDesc(dto.desc);
+       item.setImageUrl(dto.imageUrl);
        return itemRepository.save(item);
    }
 
