@@ -1,5 +1,6 @@
 package io.binary.coffeenotfound_404.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,7 @@ public class OrderItems {
 
     @Setter
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "orders_id")
     private Orders orders;
 
@@ -22,6 +24,7 @@ public class OrderItems {
     @ManyToOne
     @JoinColumn(name = "items_id")
     private Items items;
+
     @Setter
     private Integer quantity;
 

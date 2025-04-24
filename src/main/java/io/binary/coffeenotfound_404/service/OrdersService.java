@@ -30,15 +30,17 @@ import java.util.List;
 public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final ItemsRepository itemsRepository;
-    private final
-    OrdersValidator ordersValidator;
+    private final OrdersValidator ordersValidator;
 
     // 주문 생성 기능
     // 주문 객체 생성
     public Orders save(CreateOrdersRequestDto dto) {
 
         // 유효성 검사
-        ordersValidator.ordersValidate(dto);
+        ordersValidator.emailValidate(dto.getEmail());
+        ordersValidator.addressValidate(dto.getAddress());
+        ordersValidator.postcodeValidate(dto.getPostcode());
+        ordersValidator.orderItemsListValidate(dto.getOrderItemsList());
 
         // 유효성 검사가 모두 통과되면 주문 생성
         // OrderItems 생성을 위해 OrderItems List 빼고 Orders Build
@@ -55,7 +57,7 @@ public class OrdersService {
         for (OrderItemsDto itemsForm : orderItemsFormList) {
 
             Items findItems = itemsRepository.findById(itemsForm.getItemsId())
-                    .orElseThrow(() -> new OrdersException.ItemsNotFoundException());
+                    .orElseThrow(OrdersException.ItemsNotFoundException::new);
 
             OrderItems orderItems = OrderItems.builder()
                     .orders(orders)
@@ -84,4 +86,19 @@ public class OrdersService {
         return ordersRepository.findByEmail(email);
     }
 
+    // 주문 삭제 기능
+    public void removeOrdersByEmail(String email, Long orderId) {
+        // email 유효성 검사
+        ordersValidator.emailValidate(email);
+
+        for (Orders targetOrder : findOrdersByEmail(email)) {
+            if (targetOrder.getId().equals(orderId)) {
+                ordersRepository.delete(targetOrder);
+                return;
+            }
+        }
+
+        // 일치하는 id의 주문이 없는 경우 예외 발생
+        throw new OrdersException.ItemsNotFoundException();
+    }
 }

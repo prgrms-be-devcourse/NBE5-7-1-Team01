@@ -41,4 +41,12 @@ public class OrdersController {
 
         return ResponseEntity.ok(orders);  // 200 OK + JSON
     }
+
+    @DeleteMapping("/{email:.+}/{orderId}")
+    public ResponseEntity<Void> deleteOrdersByEmail(@PathVariable String email, @PathVariable Long orderId) {
+        ordersService.removeOrdersByEmail(email, orderId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{email:.+}/{orderId}")
 }

@@ -10,24 +10,30 @@ import java.util.List;
 @Component
 public class OrdersValidator {
 
-    public void ordersValidate(CreateOrdersRequestDto dto) {
-        // 1. 이메일 검사
-        if (!isValidEmail(dto.getEmail())) {
+    // 1. 이메일 검사
+    public void emailValidate(String email) {
+        if (!isValidEmail(email)) {
             throw new OrdersException.InvalidEmailException();
         }
+    }
 
-        // 2. 주소 검사
-        if (!isValidAddress(dto.getAddress())) {
+    // 2. 주소 검사
+    public void addressValidate(String address) {
+        if (!isValidAddress(address)) {
             throw new OrdersException.InvalidAddressException();
         }
+    }
 
-        // 3. 우편번호 검사
-        if (!isValidPostcode(dto.getPostcode())) {
+    // 3. 우편번호 검사
+    public void postcodeValidate(String postcode) {
+        if (!isValidPostcode(postcode)) {
             throw new OrdersException.InvalidPostcodeException();
         }
+    }
 
-        // 4. 주문 아이템 검사
-        if (!isValidOrderItems(dto.getOrderItemsList())) {
+    // 4. 주문 아이템 검사
+    public void orderItemsListValidate(List<OrderItemsDto> orderItemsList) {
+        if (!isValidOrderItems(orderItemsList)) {
             throw new OrdersException.InvalidOrderItemsException();
         }
     }
