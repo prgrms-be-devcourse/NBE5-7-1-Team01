@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminController {
     @GetMapping("/admin")
     public String adminPage() {
-        return "admin"; // templates/admin.html
+        return "redirect:/admin.html"; // templates/admin.html
     }
 }

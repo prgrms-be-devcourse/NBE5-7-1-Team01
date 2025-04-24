@@ -32,7 +32,7 @@ public class Items {
     @Column(name = "item_desc", nullable = false)
     private String desc;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String imageUrl;
 
     @Column(nullable = false)

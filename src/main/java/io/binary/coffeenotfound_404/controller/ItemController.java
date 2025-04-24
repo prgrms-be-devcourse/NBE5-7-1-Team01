@@ -8,13 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/items")
 @Slf4j
+
 //CRUD Controller
 public class ItemController {
     private final ItemService itemService;
-
 
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
@@ -30,15 +33,17 @@ public class ItemController {
 
     }
 
-
-    //단일 조회 (GET /Items/{id})
-    @GetMapping("/{id}")
-    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long id) {
-        Items item = itemService.getItemById(id);
-        return ResponseEntity.ok(new ItemResponseDto(item));
+    //전체 목록 조회 (GET /Items)
+    @GetMapping
+    public ResponseEntity<List<ItemResponseDto>> getAllItem() {
+        List<Items> items = itemService.getAllItem();
+        List<ItemResponseDto> result = items.stream()
+                                            .map(ItemResponseDto::new)
+                                            .toList();
+        return ResponseEntity.ok(result);
     }
 
-    //수정
+    //아이템 수정 (PUT /Items/id)
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long id, @RequestBody ItemRequestDto dto) {
         //DTO -> Service
@@ -46,12 +51,10 @@ public class ItemController {
         return ResponseEntity.ok(new ItemResponseDto(updateItem));
     }
 
-    //삭제
+    //삭제 (DELETE /Items/id)
     @DeleteMapping("/{id}")
     public ResponseEntity<Items> deleteItem(@PathVariable Long id) {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }

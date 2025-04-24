@@ -6,6 +6,7 @@ import io.binary.coffeenotfound_404.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 // 이미지 저장 경로 가져와야 하고
 
@@ -17,6 +18,7 @@ public class ItemService {
        this.itemRepository = itemRepository;
    }
 
+   // CRETAE
    public Items createItem(ItemRequestDto dto) {
        Items item = Items.builder()
                .name(dto.name)
@@ -30,9 +32,9 @@ public class ItemService {
        return itemRepository.save(item);
    }
 
-   public Items getItemById(Long id) {
-       return itemRepository.findById(id)
-               .orElseThrow(()->new RuntimeException("Item not found"));
+   // 목록 조회
+   public List<Items> getAllItem() {
+       return itemRepository.findAll();
    }
 
    public Items updateItem(Long id, ItemRequestDto dto) {
@@ -44,6 +46,10 @@ public class ItemService {
        item.setStock(dto.stock);
        item.setDesc(dto.desc);
        item.setImageUrl(dto.imageUrl);
+       item.setCategory(dto.category);
+       item.setCreatedAt(dto.createdAt);
+
+       System.out.println(">>> createdAt: " + dto.createdAt);
        return itemRepository.save(item);
    }
 
