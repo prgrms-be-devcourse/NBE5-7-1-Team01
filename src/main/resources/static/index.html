@@ -211,6 +211,36 @@
   </div>
 </div>
 
+<!-- 주문 확인 모달 (스타일 업그레이드 버전) -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius: 1rem; border: none;">
+      <div class="modal-header bg-dark text-white" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+        <h5 class="modal-title fw-bold"><i class="bi bi-receipt-cutoff"></i> 주문 확인</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="background-color: #fefcf9;">
+        <div class="p-3" style="border: 1px dashed #ccc; border-radius: 0.5rem; background-color: #fff;">
+          <p><strong>이메일:</strong> <span id="modal-email" class="text-muted"></span></p>
+          <p><strong>주소:</strong> <span id="modal-address" class="text-muted"></span></p>
+          <p><strong>우편번호:</strong> <span id="modal-postCode" class="text-muted"></span></p>
+          <hr>
+          <div id="modal-order-items" class="mt-3" style="font-family: 'Courier New', monospace; line-height: 1.6;"></div>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <h5 class="fw-bold mb-0">총 결제금액</h5>
+            <h4 class="text-end text-danger fw-bold mb-0"><span id="modal-total-price"></span></h4>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between px-4 py-3" style="background-color: #f8f9fa; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-dark rounded-pill px-4" id="confirm-order-btn">최종 결제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- 토스트 알림 -->
 <div class="toast-container"></div>
 
@@ -397,178 +427,11 @@
       showToast(error.message || '결제 실패', 'danger');
     }
   });
-
-  // 주문내역 조회 기능
-  document.getElementById('search-order-btn').addEventListener('click', async () => {
-    const email = document.getElementById('search-email').value.trim();
-    if (!email) {
-      showToast('이메일을 입력해주세요', 'danger');
-      return;
-    }
-
-    try {
-      const response = await fetch(`/orders?email=${encodeURIComponent(email)}`);
-      if (!response.ok) throw new Error('주문내역 조회 실패');
-      const orders = await response.json();
-
-      const ordersContainer = document.getElementById('orders-items');
-      const noOrdersMessage = document.getElementById('no-orders-message');
-      const ordersList = document.getElementById('orders-list');
-
-      if (orders.length === 0) {
-        noOrdersMessage.classList.remove('d-none');
-        noOrdersMessage.innerHTML = `
-          <i class="bi bi-box-seam" style="font-size: 3rem;"></i>
-          <p class="mt-3">조회된 주문내역이 없습니다</p>
-        `;
-        ordersList.classList.add('d-none');
-        return;
-      }
-
-      noOrdersMessage.classList.add('d-none');
-      ordersList.classList.remove('d-none');
-
-      ordersContainer.innerHTML = orders.map(order => `
-        <div class="card mb-3 order-item" data-order-id="${order.id}">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-              <div>
-                <h6 class="card-title fw-bold">주문번호: ${order.id}</h6>
-                <p class="mb-1"><small class="text-muted">주문일: ${new Date(order.createdAt).toLocaleString()}</small></p>
-                <p class="mb-1"><small class="text-muted">상태: ${order.status}</small></p>
-              </div>
-              <div class="text-end">
-                <p class="mb-1 fw-bold">${order.totalPrice.toLocaleString()}원</p>
-                <div class="btn-group btn-group-sm">
-                  <button class="btn btn-outline-primary edit-order-btn" data-order-id="${order.id}">수정</button>
-                  <button class="btn btn-outline-danger delete-order-btn" data-order-id="${order.id}">삭제</button>
-                </div>
-              </div>
-            </div>
-            <div class="order-details mt-2">
-              <p class="mb-1"><strong>주소:</strong> ${order.address} (${order.postCode})</p>
-              <div class="order-items mt-2">
-                ${order.orderItemList.map(item => `
-                  <div class="d-flex justify-content-between">
-                    <span>${item.name} × ${item.quantity}</span>
-                    <span>${(item.price * item.quantity).toLocaleString()}원</span>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-            <div class="edit-form d-none mt-3">
-              <div class="mb-2">
-                <label class="form-label">주소</label>
-                <input type="text" class="form-control address-input" value="${order.address}">
-              </div>
-              <div class="mb-2">
-                <label class="form-label">우편번호</label>
-                <input type="text" class="form-control postcode-input" value="${order.postCode}">
-              </div>
-              <div class="mb-2">
-                <label class="form-label">상태</label>
-                <select class="form-select status-input">
-                  <option value="PENDING" ${order.status === 'PENDING' ? 'selected' : ''}>대기중</option>
-                  <option value="PROCESSING" ${order.status === 'PROCESSING' ? 'selected' : ''}>처리중</option>
-                  <option value="COMPLETED" ${order.status === 'COMPLETED' ? 'selected' : ''}>완료됨</option>
-                  <option value="CANCELLED" ${order.status === 'CANCELLED' ? 'selected' : ''}>취소됨</option>
-                </select>
-              </div>
-              <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-sm btn-outline-secondary cancel-edit-btn">취소</button>
-                <button class="btn btn-sm btn-primary save-order-btn">저장</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `).join('');
-
-      // 수정 버튼 이벤트 리스너 추가
-      document.querySelectorAll('.edit-order-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const orderId = e.target.getAttribute('data-order-id');
-          const orderItem = document.querySelector(`.order-item[data-order-id="${orderId}"]`);
-          orderItem.querySelector('.order-details').classList.add('d-none');
-          orderItem.querySelector('.edit-form').classList.remove('d-none');
-          orderItem.classList.add('edit-mode');
-          e.target.closest('.btn-group').classList.add('d-none');
-        });
-      });
-
-      // 취소 버튼 이벤트 리스너 추가
-      document.querySelectorAll('.cancel-edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const orderItem = e.target.closest('.order-item');
-          orderItem.querySelector('.order-details').classList.remove('d-none');
-          orderItem.querySelector('.edit-form').classList.add('d-none');
-          orderItem.classList.remove('edit-mode');
-          orderItem.querySelector('.btn-group').classList.remove('d-none');
-        });
-      });
-
-      // 저장 버튼 이벤트 리스너 추가
-      document.querySelectorAll('.save-order-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          const orderItem = e.target.closest('.order-item');
-          const orderId = orderItem.getAttribute('data-order-id');
-          const address = orderItem.querySelector('.address-input').value;
-          const postCode = orderItem.querySelector('.postcode-input').value;
-          const status = orderItem.querySelector('.status-input').value;
-
-          try {
-            const response = await fetch(`/orders/${orderId}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ address, postCode, status })
-            });
-
-            if (!response.ok) throw new Error('주문 수정 실패');
-
-            showToast('주문이 수정되었습니다', 'success');
-            // 수정 후 조회 다시 실행
-            document.getElementById('search-order-btn').click();
-          } catch (error) {
-            showToast(error.message, 'danger');
-          }
-        });
-      });
-
-      // 삭제 버튼 이벤트 리스너 추가
-      document.querySelectorAll('.delete-order-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          const orderId = e.target.getAttribute('data-order-id');
-          if (!confirm('정말로 이 주문을 삭제하시겠습니까?')) return;
-
-          try {
-            const response = await fetch(`/orders/${orderId}`, {
-              method: 'DELETE'
-            });
-
-            if (!response.ok) throw new Error('주문 삭제 실패');
-
-            showToast('주문이 삭제되었습니다', 'success');
-            // 삭제 후 조회 다시 실행
-            document.getElementById('search-order-btn').click();
-          } catch (error) {
-            showToast(error.message, 'danger');
-          }
-        });
-      });
-
-    } catch (error) {
-      showToast(error.message, 'danger');
-      document.getElementById('no-orders-message').classList.remove('d-none');
-      document.getElementById('no-orders-message').innerHTML = `
-        <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
-        <p class="mt-3">주문내역 조회 중 오류 발생</p>
-      `;
-      document.getElementById('orders-list').classList.add('d-none');
-    }
-  });
-
   document.addEventListener('DOMContentLoaded', renderProducts);
   document.getElementById('admin-btn').addEventListener('click', () => {
     window.location.href = '/admin';
   });
 </script>
+
 </body>
+</html>
