@@ -37,6 +37,8 @@ public class ItemService {
        return itemRepository.findAll();
    }
 
+
+
    public Items updateItem(Long id, ItemRequestDto dto) {
        Items item = itemRepository.findById(id)
                .orElseThrow(()->new RuntimeException("Item not found"));
@@ -45,11 +47,14 @@ public class ItemService {
        item.setPrice(dto.price);
        item.setStock(dto.stock);
        item.setDesc(dto.desc);
-       item.setImageUrl(dto.imageUrl);
-       item.setCategory(dto.category);
-       item.setCreatedAt(dto.createdAt);
 
-       System.out.println(">>> createdAt: " + dto.createdAt);
+       item.setCategory(dto.category);
+
+       // null이면 기존 값 유지
+       if (dto.imageUrl != null) {
+           item.setImageUrl(dto.imageUrl);
+       }
+
        return itemRepository.save(item);
    }
 
@@ -59,4 +64,8 @@ public class ItemService {
        itemRepository.deleteById(id);
    }
 
+    public Items getItemById(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+    }
 }

@@ -33,6 +33,13 @@ public class ItemController {
 
     }
 
+    // 단일 상품 조회 (GET /Items)
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long id) {
+        Items item = itemService.getItemById(id);
+        return ResponseEntity.ok(new ItemResponseDto(item));
+    }
+
     //전체 목록 조회 (GET /Items)
     @GetMapping
     public ResponseEntity<List<ItemResponseDto>> getAllItem() {
@@ -47,8 +54,14 @@ public class ItemController {
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long id, @RequestBody ItemRequestDto dto) {
         //DTO -> Service
-        Items updateItem = itemService.updateItem(id, dto);
-        return ResponseEntity.ok(new ItemResponseDto(updateItem));
+        try {
+            Items updateItem = itemService.updateItem(id, dto);
+            return ResponseEntity.ok(new ItemResponseDto(updateItem));
+        } catch (Exception e) {
+            log.error("업데이트 실패: {}", e.getMessage()); // 핵심 에러 메시지 출력
+            e.printStackTrace(); // 전체 스택 트레이스 확인 (콘솔에 찍힘)
+            return ResponseEntity.internalServerError().body(null);
+        }
     }
 
     //삭제 (DELETE /Items/id)
