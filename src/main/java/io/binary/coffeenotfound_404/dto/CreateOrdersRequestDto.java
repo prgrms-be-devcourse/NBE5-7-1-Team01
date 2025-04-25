@@ -12,4 +12,7 @@ public class CreateOrdersRequestDto {
     private String address;
     private String postCode;
     private List<OrderItemsDto> orderItemsList;
+
+    private Integer price;
+    private Integer totalPrice;
 }

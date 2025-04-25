@@ -26,7 +26,7 @@ public class Orders {
     @Setter
     private String postCode;
 
-    private final LocalDateTime orderedAt = LocalDateTime.now();
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Setter
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,7 +47,7 @@ public class Orders {
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", postCode='" + postCode + '\'' +
-                ", orderedAt=" + orderedAt +
+                ", createdAt=" + createdAt +
                 ", orderItemsList=" + orderItemsList +
                 '}';
     }
