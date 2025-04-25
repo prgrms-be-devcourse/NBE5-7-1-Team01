@@ -32,7 +32,7 @@ public class OrdersController {
     public ResponseEntity<List<Orders>> getOrdersByEmail(@PathVariable String email) {
         List<Orders> orders = ordersService.findOrdersByEmail(email);
 
-        if (orders.isEmpty()) {            // 주문이 없으면 204 No Content
+        if (orders.isEmpty()) {            // 주문이 없으면 204 No Content
             return ResponseEntity.noContent().build();
         }
 

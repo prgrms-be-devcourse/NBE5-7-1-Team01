@@ -32,6 +32,14 @@ public class Orders {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItems> orderItemsList;
 
+    @Builder
+    public Orders(String email, String address, String postcode, List<OrderItems> orderItemsList) {
+        this.email = email;
+        this.address = address;
+        this.postcode = postcode;
+        this.orderItemsList = orderItemsList;
+    }
+
     @Override
     public String toString() {
         return "Orders{" +
@@ -42,13 +50,5 @@ public class Orders {
                 ", orderedAt=" + orderedAt +
                 ", orderItemsList=" + orderItemsList +
                 '}';
-    }
-
-    @Builder
-    public Orders(String email, String address, String postcode, List<OrderItems> orderItemsList) {
-        this.email = email;
-        this.address = address;
-        this.postcode = postcode;
-        this.orderItemsList = orderItemsList;
     }
 }

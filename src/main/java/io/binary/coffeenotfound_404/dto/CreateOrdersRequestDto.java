@@ -1,6 +1,5 @@
 package io.binary.coffeenotfound_404.dto;
 
-import io.binary.coffeenotfound_404.domain.OrderItems;
 import lombok.Getter;
 import lombok.Setter;
 
