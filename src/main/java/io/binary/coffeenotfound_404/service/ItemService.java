@@ -2,7 +2,7 @@ package io.binary.coffeenotfound_404.service;
 
 import io.binary.coffeenotfound_404.domain.Items;
 import io.binary.coffeenotfound_404.dto.ItemRequestDto;
-import io.binary.coffeenotfound_404.repository.ItemRepository;
+import io.binary.coffeenotfound_404.dao.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

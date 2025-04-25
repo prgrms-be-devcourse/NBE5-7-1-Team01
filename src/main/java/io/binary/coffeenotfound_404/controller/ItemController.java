@@ -8,22 +8,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
 @Slf4j
 
-//CRUD Controller
-public class ItemController {
+    //CRUD Controller
+    public class ItemController {
     private final ItemService itemService;
 
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
-    //아이템 생성 (POST /items)
+    //상품 추가 (POST /items)
     @PostMapping
     public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemRequestDto dto) {
         //DTO -> Service
@@ -33,14 +32,14 @@ public class ItemController {
 
     }
 
-    // 단일 상품 조회 (GET /Items)
+    //단일 상품 조회 (GET /Items)
     @GetMapping("/{id}")
     public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long id) {
         Items item = itemService.getItemById(id);
         return ResponseEntity.ok(new ItemResponseDto(item));
     }
 
-    //전체 목록 조회 (GET /Items)
+    //전체 상품 목록 조회 (GET /Items)
     @GetMapping
     public ResponseEntity<List<ItemResponseDto>> getAllItem() {
         List<Items> items = itemService.getAllItem();
@@ -50,7 +49,7 @@ public class ItemController {
         return ResponseEntity.ok(result);
     }
 
-    //아이템 수정 (PUT /Items/id)
+    //상품 정보 수정 (PUT /Items/id)
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long id, @RequestBody ItemRequestDto dto) {
         //DTO -> Service
@@ -58,13 +57,13 @@ public class ItemController {
             Items updateItem = itemService.updateItem(id, dto);
             return ResponseEntity.ok(new ItemResponseDto(updateItem));
         } catch (Exception e) {
-            log.error("업데이트 실패: {}", e.getMessage()); // 핵심 에러 메시지 출력
-            e.printStackTrace(); // 전체 스택 트레이스 확인 (콘솔에 찍힘)
+            log.error("업데이트 실패: {}", e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(null);
         }
     }
 
-    //삭제 (DELETE /Items/id)
+    //상품 삭제 (DELETE /Items/id)
     @DeleteMapping("/{id}")
     public ResponseEntity<Items> deleteItem(@PathVariable Long id) {
         itemService.deleteItem(id);

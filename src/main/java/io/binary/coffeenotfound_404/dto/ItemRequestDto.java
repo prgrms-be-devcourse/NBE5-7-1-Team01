@@ -10,8 +10,6 @@ public class ItemRequestDto {
     public String desc;
     public String imageUrl;
 
-//    @JsonDeserialize(using = LocalDateDeserializer.class)
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public LocalDate createdAt;
 
     @Override
