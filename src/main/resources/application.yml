@@ -1,9 +1,10 @@
 spring:
   datasource:
-    username: root
-    password: test1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/coffeedb
+    url: jdbc:mysql://localhost:3306/
+    username:
+    password:
+
   jpa:
     properties:
       hibernate:
