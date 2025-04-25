@@ -71,6 +71,18 @@
     .logo-entry {
       animation: logoEntry 0.5s ease-out;
     }
+
+    .order-item {
+      transition: background-color 0.2s;
+    }
+
+    .order-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .edit-mode {
+      background-color: #fff8e1;
+    }
   </style>
 </head>
 <body>
@@ -127,6 +139,73 @@
           <h5 class="col text-end fw-bold" id="total-price">0원</h5>
         </div>
         <button id="checkout-btn" class="btn btn-dark w-100 mt-2 py-2 fw-bold">결제하기</button>
+        <button id="order-history-btn" class="btn btn-outline-secondary w-100 mt-2 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">
+          <i class="bi bi-clock-history"></i> 주문내역 조회
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 주문 확인 모달 (스타일 업그레이드 버전) -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border-radius: 1rem; border: none;">
+      <div class="modal-header bg-dark text-white" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+        <h5 class="modal-title fw-bold"><i class="bi bi-receipt-cutoff"></i> 주문 확인</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="background-color: #fefcf9;">
+        <div class="p-3" style="border: 1px dashed #ccc; border-radius: 0.5rem; background-color: #fff;">
+          <p><strong>이메일:</strong> <span id="modal-email" class="text-muted"></span></p>
+          <p><strong>주소:</strong> <span id="modal-address" class="text-muted"></span></p>
+          <p><strong>우편번호:</strong> <span id="modal-postCode" class="text-muted"></span></p>
+          <hr>
+          <div id="modal-order-items" class="mt-3" style="font-family: 'Courier New', monospace; line-height: 1.6;"></div>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <h5 class="fw-bold mb-0">총 결제금액</h5>
+            <h4 class="text-end text-danger fw-bold mb-0"><span id="modal-total-price"></span></h4>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between px-4 py-3" style="background-color: #f8f9fa; border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-dark rounded-pill px-4" id="confirm-order-btn">최종 결제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 주문내역 조회 모달 -->
+<div class="modal fade" id="orderHistoryModal" tabindex="-1" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title fw-bold" id="orderHistoryModalLabel"><i class="bi bi-clock-history"></i> 주문내역 조회</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-4">
+          <label for="search-email" class="form-label">이메일 주소</label>
+          <div class="input-group">
+            <input type="email" class="form-control" id="search-email" placeholder="주문시 사용한 이메일을 입력하세요">
+            <button class="btn btn-dark" type="button" id="search-order-btn">조회</button>
+          </div>
+        </div>
+        <div id="order-history-container" class="mt-3">
+          <div class="text-center text-muted py-5" id="no-orders-message">
+            <i class="bi bi-box-seam" style="font-size: 3rem;"></i>
+            <p class="mt-3">조회할 이메일을 입력해주세요</p>
+          </div>
+          <div id="orders-list" class="d-none">
+            <h5 class="mb-3 fw-bold">주문 내역</h5>
+            <div id="orders-items"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
       </div>
     </div>
   </div>
@@ -348,11 +427,11 @@
       showToast(error.message || '결제 실패', 'danger');
     }
   });
-
   document.addEventListener('DOMContentLoaded', renderProducts);
   document.getElementById('admin-btn').addEventListener('click', () => {
     window.location.href = '/admin';
   });
 </script>
+
 </body>
 </html>
