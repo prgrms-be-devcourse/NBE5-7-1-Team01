@@ -1,7 +1,7 @@
 ---
 name: 'issue templates for Team Binary '
 about: issue templates for Team Binary
-title: ''
+title: "[기능 | 버그 | 리팩토링 | 문서] 간단한 설명 - 이름"
 labels: ''
 assignees: ''
 
