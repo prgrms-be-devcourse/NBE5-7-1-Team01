@@ -6,6 +6,7 @@ import lombok.*;
 
 @Getter
 @Entity
+@Table(name = "order_items")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItems {
 
