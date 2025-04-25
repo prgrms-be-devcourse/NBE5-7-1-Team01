@@ -24,7 +24,7 @@ public class Orders {
     private String address;
 
     @Setter
-    private String postcode;
+    private String postCode;
 
     private final LocalDateTime orderedAt = LocalDateTime.now();
 
@@ -33,10 +33,10 @@ public class Orders {
     private List<OrderItems> orderItemsList;
 
     @Builder
-    public Orders(String email, String address, String postcode, List<OrderItems> orderItemsList) {
+    public Orders(String email, String address, String postCode, List<OrderItems> orderItemsList) {
         this.email = email;
         this.address = address;
-        this.postcode = postcode;
+        this.postCode = postCode;
         this.orderItemsList = orderItemsList;
     }
 
@@ -46,7 +46,7 @@ public class Orders {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
-                ", postcode='" + postcode + '\'' +
+                ", postCode='" + postCode + '\'' +
                 ", orderedAt=" + orderedAt +
                 ", orderItemsList=" + orderItemsList +
                 '}';

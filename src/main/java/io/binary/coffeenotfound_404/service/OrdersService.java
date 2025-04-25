@@ -1,12 +1,12 @@
 package io.binary.coffeenotfound_404.service;
 
+import io.binary.coffeenotfound_404.dao.ItemRepository;
 import io.binary.coffeenotfound_404.dao.OrdersRepository;
 import io.binary.coffeenotfound_404.domain.Items;
 import io.binary.coffeenotfound_404.domain.OrderItems;
 import io.binary.coffeenotfound_404.domain.Orders;
 import io.binary.coffeenotfound_404.dto.*;
 import io.binary.coffeenotfound_404.exceptions.OrdersException;
-import io.binary.coffeenotfound_404.dao.ItemsRepository;
 import io.binary.coffeenotfound_404.validation.OrdersValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrdersService {
     private final OrdersRepository ordersRepository;
-    private final ItemsRepository itemsRepository;
+    private final ItemRepository itemRepository;
     private final OrdersValidator ordersValidator;
 
     // 주문 생성 기능
@@ -36,7 +36,7 @@ public class OrdersService {
         // 유효성 검사
         ordersValidator.emailValidate(dto.getEmail());
         ordersValidator.addressValidate(dto.getAddress());
-        ordersValidator.postcodeValidate(dto.getPostcode());
+        ordersValidator.postCodeValidate(dto.getPostCode());
         ordersValidator.orderItemsListValidate(dto.getOrderItemsList());
 
         // 유효성 검사가 모두 통과되면 주문 생성
@@ -44,7 +44,7 @@ public class OrdersService {
         Orders orders = Orders.builder()
                 .email(dto.getEmail())
                 .address(dto.getAddress())
-                .postcode(dto.getPostcode())
+                .postCode(dto.getPostCode())
                 .build();
 
         // OrdersForm -> OrderItemsDTO 리스트를 통해 Items의 id와 quantity를 얻음
@@ -53,7 +53,7 @@ public class OrdersService {
         List<OrderItemsDto> orderItemsFormList = dto.getOrderItemsList();
         for (OrderItemsDto itemsForm : orderItemsFormList) {
 
-            Items findItems = itemsRepository.findById(itemsForm.getItemsId())
+            Items findItems = itemRepository.findById(itemsForm.getItemId())
                     .orElseThrow(OrdersException.ItemsNotFoundException::new);
 
             OrderItems orderItems = OrderItems.builder()
@@ -114,7 +114,7 @@ public class OrdersService {
 
         /* 2) 주소·우편번호 부분 수정 */
         if (dto.getAddress() != null)   order.setAddress(dto.getAddress());
-        if (dto.getPostcode() != null)  order.setPostcode(dto.getPostcode());
+        if (dto.getPostCode() != null)  order.setPostCode(dto.getPostCode());
 
         /* 3) 주문‑상품 전체 교체  */
         if (dto.getOrderItemsList() != null && !dto.getOrderItemsList().isEmpty()) {
@@ -124,7 +124,7 @@ public class OrdersService {
 
             for (OrderItemsDto line : dto.getOrderItemsList()) {
 
-                Items item = itemsRepository.findById(line.getItemsId())
+                Items item = itemRepository.findById(line.getItemId())
                         .orElseThrow(OrdersException.ItemsNotFoundException::new);
 
                 OrderItems oi = OrderItems.builder()
