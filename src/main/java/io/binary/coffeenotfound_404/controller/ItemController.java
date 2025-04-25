@@ -7,15 +7,17 @@ import io.binary.coffeenotfound_404.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
 @Slf4j
 
-    //CRUD Controller
-    public class ItemController {
+//CRUD Controller
+public class ItemController {
     private final ItemService itemService;
 
     public ItemController(ItemService itemService) {
@@ -24,13 +26,11 @@ import java.util.List;
 
     //상품 추가 (POST /items)
     @PostMapping
-    public ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemRequestDto dto) {
-        //DTO -> Service
-        Items saveItem = itemService.createItem(dto);
-
-        return ResponseEntity.ok(new ItemResponseDto(saveItem));
-
+    public ResponseEntity<String> createItem(@RequestBody ItemRequestDto itemRequestDto) {
+        itemService.createItem(itemRequestDto);
+        return ResponseEntity.ok("Item created successfully");
     }
+
 
     //단일 상품 조회 (GET /Items)
     @GetMapping("/{id}")
@@ -44,8 +44,8 @@ import java.util.List;
     public ResponseEntity<List<ItemResponseDto>> getAllItem() {
         List<Items> items = itemService.getAllItem();
         List<ItemResponseDto> result = items.stream()
-                                            .map(ItemResponseDto::new)
-                                            .toList();
+                .map(ItemResponseDto::new)
+                .toList();
         return ResponseEntity.ok(result);
     }
 

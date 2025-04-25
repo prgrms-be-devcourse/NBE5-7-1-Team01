@@ -321,13 +321,24 @@
       document.getElementById('form-alert').style.display = 'none';
     }
 
+    ///////// 추가
+    const toBase64 = file =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = error => reject(error);
+            });
+
+    const base64Image = await toBase64(imageFile);
+   //////////////
     const newItem = {
       name,
       price,
       stock,
       category,
       desc: description,
-      imageUrl: "https://via.placeholder.com/100"  // 기본 이미지
+      imageBase64: base64Image // 추가
     };
 
     try {
