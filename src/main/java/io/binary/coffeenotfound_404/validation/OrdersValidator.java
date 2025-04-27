@@ -25,8 +25,8 @@ public class OrdersValidator {
     }
 
     // 3. 우편번호 검사
-    public void postcodeValidate(String postcode) {
-        if (!isValidPostcode(postcode)) {
+    public void postCodeValidate(String postcode) {
+        if (!isValidPostCode(postcode)) {
             throw new OrdersException.InvalidPostcodeException();
         }
     }
@@ -50,7 +50,7 @@ public class OrdersValidator {
     }
 
     // 우편번호 유효성 검사
-    private boolean isValidPostcode(String postcode) {
+    private boolean isValidPostCode(String postcode) {
         return postcode != null && !postcode.trim().isEmpty();
     }
 

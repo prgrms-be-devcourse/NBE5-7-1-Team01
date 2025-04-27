@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateOrderRequestDto {
     private String address;
-    private String postcode;
+    private String postCode;
     private List<OrderItemsDto> orderItemsList;
 }

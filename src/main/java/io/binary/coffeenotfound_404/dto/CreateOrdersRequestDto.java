@@ -10,6 +10,9 @@ import java.util.List;
 public class CreateOrdersRequestDto {
     private String email;
     private String address;
-    private String postcode;
+    private String postCode;
     private List<OrderItemsDto> orderItemsList;
+
+    private Integer price;
+    private Integer totalPrice;
 }
