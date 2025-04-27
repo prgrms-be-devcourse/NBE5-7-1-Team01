@@ -84,6 +84,10 @@ public class OrdersService {
         return ordersRepository.findByEmail(email);
     }
 
+    // 주문 전체 조회 기능 (Admin용)
+    public List<Orders> findAllOrders() {
+        return ordersRepository.findAll();
+    }
 
     // 주문 삭제 기능
     public void removeOrdersByEmail(String email, Long orderId) {
