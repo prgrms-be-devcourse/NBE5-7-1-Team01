@@ -24,6 +24,7 @@ public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final ItemRepository itemRepository;
     private final OrdersValidator ordersValidator;
+    private final ItemService itemService;
 
     // 주문 생성 기능
     // 1. 이메일, 주소, 우편번호, 아이템들 입력
@@ -61,6 +62,11 @@ public class OrdersService {
                     .items(findItems)
                     .quantity(itemsForm.getQuantity())
                     .build();
+//            해당 아이템의 재고 변경
+            findItems.setStock(findItems.getStock()-itemsForm.getQuantity());
+            itemRepository.save(findItems);
+
+
 
             orderItemsList.add(orderItems);
         }
@@ -96,6 +102,13 @@ public class OrdersService {
 
         for (Orders targetOrder : findOrdersByEmail(email)) {
             if (targetOrder.getId().equals(orderId)) {
+
+//                삭제되는 아이템의 재고 복구
+                for (OrderItems orderItems : targetOrder.getOrderItemsList()) {
+                    Items findItem = itemService.getItemById(orderItems.getItems().getId());
+                    findItem.setStock(findItem.getStock()+orderItems.getQuantity());
+                    itemRepository.save(findItem);
+                }
                 ordersRepository.delete(targetOrder);
                 return;
             }

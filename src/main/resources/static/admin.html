@@ -299,7 +299,7 @@
       renderMenuItems();
     } catch (error) {
       console.error('Error:', error);
-      alert('아이템 삭제에 실패했습니다.');
+      alert('아이템 삭제에 실패했습니다.\n주문내역 중 해당 아이템이 있는지 확인해주세요');
     }
   }
 
@@ -331,7 +331,7 @@
             });
 
     const base64Image = await toBase64(imageFile);
-   //////////////
+    //////////////
     const newItem = {
       name,
       price,
@@ -542,9 +542,9 @@
   // 초기 렌더링
   document.addEventListener('DOMContentLoaded', renderMenuItems);
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await renderMenuItems();
-});
+  document.addEventListener("DOMContentLoaded", async () => {
+    await renderMenuItems();
+  });
 
 </script>
 </body>
