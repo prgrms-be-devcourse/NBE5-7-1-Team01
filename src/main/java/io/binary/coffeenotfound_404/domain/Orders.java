@@ -29,6 +29,9 @@ public class Orders {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Setter
+    private boolean shipped = false;
+
+    @Setter
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItems> orderItemsList;
 

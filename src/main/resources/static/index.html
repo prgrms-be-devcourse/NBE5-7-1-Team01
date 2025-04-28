@@ -494,19 +494,7 @@
                 </p>
                 <p class="mb-1">
                   <small class="text-muted">
-                    상태: ${(() => {
-                if (!order.createdAt) return order.status || '처리중';
-                const createdDate = new Date(order.createdAt);
-                const now = new Date();
-                const completeDate = new Date(createdDate);
-                if (createdDate.getHours() < 14) {
-                  completeDate.setHours(14, 0, 0, 0);
-                } else {
-                  completeDate.setDate(completeDate.getDate() + 1);
-                  completeDate.setHours(14, 0, 0, 0);
-                }
-                return now > completeDate ? '처리완료' : order.status || '처리중';
-              })()}
+                    상태: ${order.shipped ? '처리완료' : '처리전'}
                   </small>
                 </p>
               </div>

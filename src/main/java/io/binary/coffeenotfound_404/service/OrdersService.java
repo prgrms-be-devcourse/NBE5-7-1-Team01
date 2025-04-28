@@ -11,8 +11,10 @@ import io.binary.coffeenotfound_404.validation.OrdersValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,4 +157,15 @@ public class OrdersService {
         }
     }
 
+    @Scheduled(cron = "0 0 14 * * *", zone = "Asia/Seoul")
+    public void updateShippedOrders() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Orders> orders = ordersRepository.findByCreatedAtBeforeAndShippedFalse(now);
+
+        for (Orders order : orders) {
+            order.setShipped(true);
+        }
+
+        ordersRepository.saveAll(orders);
+    }
 }

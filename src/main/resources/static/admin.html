@@ -443,6 +443,8 @@
             <div class="ps-3">${itemsList}</div>
           </div>
           <p><strong>총액:</strong> ${totalPrice.toLocaleString()}원</p>
+          <p><strong>상태:</strong> ${order.shipped ? '처리완료' : '처리전'}</p>
+
           <button class="btn btn-sm btn-outline-danger mt-2" onclick="deleteOrder('${order.email}', ${order.id})">주문 삭제</button>
         </div>
         <hr>
